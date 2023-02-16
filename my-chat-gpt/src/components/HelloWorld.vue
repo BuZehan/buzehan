@@ -3,7 +3,7 @@
     <h2 class="header">
       ChatGpt
     </h2>
-    <div class="chat-list-wrapper">
+    <div ref="listWrapper" class="chat-list-wrapper">
       <div class="chat-item" v-for="(chat, index) in chatList" :key="index">
 
         <!-- 判断消息是从自己发出还是接收 -->
@@ -11,7 +11,7 @@
           <p class="oneself">
             <span>{{ chat.text }}</span>
             <a href="javascript:;">
-              <img src="https://i.postimg.cc/jdS60KQW/openai.png" alt="">
+              <img :src="chat.face" alt="">
             </a>
           </p>
         </template>
@@ -28,15 +28,15 @@
     </div>
     <div class="chat-wrapper">
       <input class="chatInput" type="text" v-model="prompt">
-      <button @click="submitForm">发送</button>
+      <button :disabled="this.isAble" ref="sendBtn" @click="submitForm">{{ currentTime }}</button>
     </div>
-  <div @click="close" :class="{'loading':isLoading}" ref="loading"><span>响应中... 请稍后</span></div>
+    <div @click="close" :class="[isLoading ? 'loading' : 'close']" ref="loading"><span>努力响应中... 请稍后</span></div>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
-
+var avatar = require('@/assets/image/avatar.jpg')
 export default {
   name: 'HelloWorld',
   props: {
@@ -44,8 +44,10 @@ export default {
   },
   data() {
     return {
-      isLoading:false,
-      api_key: "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",
+      currentTime: '发送',
+      isAble: false,
+      isLoading: false,
+      api_key: "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",
       prompt: '',
       chatMsg: '',
       prompt: '',
@@ -56,26 +58,30 @@ export default {
       chatList: [
         {
           from: 'bot',
-          face:'https://i.postimg.cc/jdS60KQW/openai.png',
+          face: 'https://i.postimg.cc/jdS60KQW/openai.png',
           text: `嗨，很高兴认识你！一般来说，每分钟提问你不能超过两次。尽管可能有某些情况在短时间内可以接受多次提问，但一般情况下，推荐的最大问答频率是一分钟不超过两次。`
         },
         {
           from: 'self',
           face:
-            'https://i.postimg.cc/jdS60KQW/openai.png',
+            avatar,
           text: '嗨，很高兴认识你'
         }
       ]
     };
   },
+
   methods: {
     submitForm() {
+      //函数防抖
       let data = {
         prompt: this.prompt,
         model: this.model,
         max_tokens: this.max_tokens,
       }
-      this.isLoading = true
+      if (!this.isAble) {
+        this.isLoading = true
+      }
       this.chatList.push({
         from: 'self',
         face:
@@ -106,11 +112,41 @@ export default {
           this.$refs.loading.children[0].innerText = error
           setTimeout(() => {
             this.isLoading = false
-          }, 4000);
+          }, 1000);
         });
+
+      this.isAble = true
+      if (this.isAble === true) {
+        let i = 5;
+        let interTime = setInterval(() => {
+          this.currentTime = i == 0 ? '发送' : i
+          if (i === 0) {
+            clearInterval(interTime)
+          }
+          i--
+        }, 1000);
+        console.log('禁用按钮')
+        setTimeout(() => {
+          this.isAble = false
+          console.log('解除禁用')
+        }, 5000);
+        return
+      }
     },
     close() {
       this.isLoading = false
+    }
+  },
+  watch: {
+    'chatList': {
+      handler(v) {
+        this.$nextTick(() => {
+          let wrapper = this.$refs.listWrapper
+          wrapper.scrollTop = wrapper.scrollHeight
+        })
+      },
+      immediate: true,
+      deep: true
     }
   }
 }
@@ -118,9 +154,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="less">
-.loading{
+.loading,
+.close {
   position: absolute;
-  transition:all 0.5s ease-in;
   width: 100vw;
   top: 0;
   height: 100vh;
@@ -132,13 +168,21 @@ export default {
   flex-wrap: wrap;
   padding: 15px;
   align-items: center;
-  background-color: #00000083;
-  span{
+  transition: all .5s linear;
+  background-color: #00000044;
+
+  span {
     display: block;
     width: 80%;
     text-align: center;
   }
 }
+
+.close {
+  opacity: 0;
+  z-index: -15;
+}
+
 .container {
   width: 100vw;
   height: 100vh;
@@ -163,6 +207,8 @@ export default {
     flex-direction: column;
     overflow: auto;
     padding-top: 20px;
+    padding-bottom: 15px;
+
     .chat-item {
       padding: 10px 5px;
     }

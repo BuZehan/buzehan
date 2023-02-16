@@ -14,7 +14,7 @@ export default createStore({
   plugins: [
     createPersistedstate({
       key: 'net-ease-cloud-music', //本地存储的名字
-      paths: ['user','discover'] //需要本地存储的模块
+      paths: ['ChatInfo'] //需要本地存储的模块
     })
   ]
   }
