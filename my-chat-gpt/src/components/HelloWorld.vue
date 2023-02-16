@@ -47,7 +47,7 @@ export default {
       currentTime: '发送',
       isAble: false,
       isLoading: false,
-      api_key: "sk-666",
+      api_key: "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",
       prompt: '',
       chatMsg: '',
       prompt: '',
@@ -85,7 +85,7 @@ export default {
       this.chatList.push({
         from: 'self',
         face:
-          'https://i.postimg.cc/jdS60KQW/openai.png',
+        avatar,
         text: this.prompt
       });
       axios.post('https://api.openai.com/v1/completions', data, {
@@ -105,7 +105,6 @@ export default {
           });
           console.log(this.response)
 
-          this.prompt = "";
         })
         .catch(error => {
           this.isLoading = true
@@ -114,6 +113,7 @@ export default {
             this.isLoading = false
           }, 1000);
         });
+        this.prompt = ''
 
       this.isAble = true
       if (this.isAble === true) {
@@ -219,7 +219,7 @@ export default {
       justify-content: flex-end;
       align-items: flex-start;
       flex-shrink: 1;
-
+      margin-top: 15px;
       span {
         max-width: 68vw;
         min-width: 30px;
@@ -227,7 +227,7 @@ export default {
         border-radius: 7px;
         display: flex;
         align-items: center;
-        box-shadow: 0 0 15px #0000002d;
+        box-shadow: 0 0 18px #6c6c6c42;
         padding: 5px;
         text-align: justify;
       }
@@ -261,12 +261,13 @@ export default {
         background-image: -o-linear-gradient(43deg, #20b7ff 0%, #9aff8b 74%, #5aff6b 99%);
         background-image: linear-gradient(43deg, #20b7ff 0%, #9aff8b 74%, #5aff6b 99%);
         min-height: 40px;
+        display: inline-block;
         border-radius: 7px;
         display: flex;
         align-items: center;
         padding: 5px;
         text-align: justify;
-
+        box-shadow: 0 0 18px #45454542;
       }
 
       a {
