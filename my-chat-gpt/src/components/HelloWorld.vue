@@ -45,7 +45,7 @@ export default {
   data() {
     return {
       isLoading:false,
-      api_key: "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",
+      api_key: "sk-666",
       prompt: '',
       chatMsg: '',
       prompt: '',
