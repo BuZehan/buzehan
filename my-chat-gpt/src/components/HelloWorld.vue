@@ -2,7 +2,7 @@
   <div class="container">
     <h2 class="header">
       ChatGpt
-      <input  v-model="api_key" type="password" placeholder="请输入API keys" />
+
     </h2>
     <div ref="listWrapper" class="chat-list-wrapper">
       <div class="chat-item" v-for="(chat, index) in chatList" :key="index">
@@ -32,7 +32,11 @@
       <button :disabled="this.isAble" ref="sendBtn" @click="submitForm">{{ currentTime }}</button>
     </div>
     <div @click="close" :class="[isLoading ? 'loading' : 'close']" ref="loading"><span>努力响应中... 请稍后</span></div>
-    <div @click="ok" :class="{"isStart":isStart}" ref="loading"><span>努力响应中... 请稍后</span></div>
+    <div  :class="[isStart ? 'isStart' :'close']"> 
+      <input v-model="api_key" type="password"
+        placeholder="请输入API keys" />
+      <button @click="ok">确&nbsp;&nbsp;认</button>
+    </div>
   </div>
 </template>
 
@@ -46,6 +50,7 @@ export default {
   },
   data() {
     return {
+      isStart:false,
       currentTime: '发送',
       isAble: false,
       isLoading: false,
@@ -72,7 +77,9 @@ export default {
       ]
     };
   },
-
+  mounted(){
+    this.isStart = true
+  },
   methods: {
     submitForm() {
       //函数防抖
@@ -87,7 +94,7 @@ export default {
       this.chatList.push({
         from: 'self',
         face:
-        avatar,
+          avatar,
         text: this.prompt
       });
       axios.post('https://api.openai.com/v1/completions', data, {
@@ -115,7 +122,7 @@ export default {
             this.isLoading = false
           }, 1000);
         });
-        this.prompt = ''
+      this.prompt = ''
 
       this.isAble = true
       if (this.isAble === true) {
@@ -137,6 +144,9 @@ export default {
     },
     close() {
       this.isLoading = false
+    },
+    ok(){
+      this.isStart = false
     }
   },
   watch: {
@@ -156,7 +166,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="less">
-.loading,
+.loading,.isStart,
 .close {
   position: absolute;
   width: 100vw;
@@ -170,7 +180,7 @@ export default {
   flex-wrap: wrap;
   padding: 15px;
   align-items: center;
-  transition: all .5s linear;
+  transition: all .2s linear;
   background-color: #00000044;
 
   span {
@@ -179,7 +189,36 @@ export default {
     text-align: center;
   }
 }
-
+.isStart{
+  display: flex;
+  flex-direction: column;
+  background-color: #000000a6;
+  input {
+    border: none;
+    padding: 2px 5px;
+    display: block;
+    margin-left: 5px;
+    height: 40px;
+    transition: all 0s;
+    width: 280px;
+    border-radius: 4px;
+  }
+  button{
+    border: none;
+    width: 200px;
+    height: 50px;
+    color: rgb(5, 14, 19);
+    font-size: 18px;
+    border-radius: 50px;
+    background-color: #85FFBD;
+    font-weight: 900;
+    background-image: -webkit-linear-gradient(45deg, #85FFBD 0%, #FFFB7D 100%);
+    background-image: -moz-linear-gradient(45deg, #85FFBD 0%, #FFFB7D 100%);
+    background-image: -o-linear-gradient(45deg, #85FFBD 0%, #FFFB7D 100%);
+    background-image: linear-gradient(45deg, #85FFBD 0%, #FFFB7D 100%);
+      margin-top: 40px;
+  }
+}
 .close {
   opacity: 0;
   z-index: -15;
@@ -195,21 +234,13 @@ export default {
     display: flex;
     align-items: center;
     padding-left: 10px;
-    justify-content:space-around;
+    justify-content: space-around;
     background-color: #0093E9;
     background-image: -webkit-linear-gradient(160deg, #0093E9 0%, #80D0C7 100%);
     background-image: -moz-linear-gradient(160deg, #0093E9 0%, #80D0C7 100%);
     background-image: -o-linear-gradient(160deg, #0093E9 0%, #80D0C7 100%);
     background-image: linear-gradient(160deg, #0093E9 0%, #80D0C7 100%);
     color: #fff;
-    input{
-      border: none;
-      padding: 2px 5px;
-      display: inline-block;
-      margin-left: 5px;
-      border-radius: 4px;
-      width: 150px;
-    }
   }
 
   .chat-list-wrapper {
@@ -231,6 +262,7 @@ export default {
       align-items: flex-start;
       flex-shrink: 1;
       margin-top: 15px;
+
       span {
         max-width: 68vw;
         min-width: 30px;
