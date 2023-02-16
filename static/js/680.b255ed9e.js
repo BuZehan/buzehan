@@ -1,0 +1,1 @@
+"use strict";(self["webpackChunknet_ease_cloud_music"]=self["webpackChunknet_ease_cloud_music"]||[]).push([[680],{5680:function(e,n,u){u.r(n),u.d(n,{default:function(){return o}});var t=u(3396);const c={id:"showData"};function s(e,n,u,s,r,a){return(0,t.wg)(),(0,t.iD)("div",c)}var r={},a=u(89);const i=(0,a.Z)(r,[["render",s]]);var o=i}}]);
