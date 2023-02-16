@@ -47,7 +47,7 @@ export default {
       currentTime: '发送',
       isAble: false,
       isLoading: false,
-      api_key: "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",
+      api_key: "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",
       prompt: '',
       chatMsg: '',
       prompt: '',
