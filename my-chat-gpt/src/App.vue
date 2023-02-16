@@ -14,7 +14,7 @@ import HomeView from './views/HomeView.vue';
 <style lang="less">
 
 *{
-  font-size: 18px;
+  font-size: 16px;
   padding: 0; 
   margin: 0;
   box-sizing: border-box;

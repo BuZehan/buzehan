@@ -2,6 +2,7 @@
   <div class="container">
     <h2 class="header">
       ChatGpt
+      <input  v-model="api_key" type="password" placeholder="请输入API keys" />
     </h2>
     <div ref="listWrapper" class="chat-list-wrapper">
       <div class="chat-item" v-for="(chat, index) in chatList" :key="index">
@@ -31,6 +32,7 @@
       <button :disabled="this.isAble" ref="sendBtn" @click="submitForm">{{ currentTime }}</button>
     </div>
     <div @click="close" :class="[isLoading ? 'loading' : 'close']" ref="loading"><span>努力响应中... 请稍后</span></div>
+    <div @click="ok" :class="{"isStart":isStart}" ref="loading"><span>努力响应中... 请稍后</span></div>
   </div>
 </template>
 
@@ -47,7 +49,7 @@ export default {
       currentTime: '发送',
       isAble: false,
       isLoading: false,
-      api_key: "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",
+      api_key: "",
       prompt: '',
       chatMsg: '',
       prompt: '',
@@ -193,12 +195,21 @@ export default {
     display: flex;
     align-items: center;
     padding-left: 10px;
+    justify-content:space-around;
     background-color: #0093E9;
     background-image: -webkit-linear-gradient(160deg, #0093E9 0%, #80D0C7 100%);
     background-image: -moz-linear-gradient(160deg, #0093E9 0%, #80D0C7 100%);
     background-image: -o-linear-gradient(160deg, #0093E9 0%, #80D0C7 100%);
     background-image: linear-gradient(160deg, #0093E9 0%, #80D0C7 100%);
     color: #fff;
+    input{
+      border: none;
+      padding: 2px 5px;
+      display: inline-block;
+      margin-left: 5px;
+      border-radius: 4px;
+      width: 150px;
+    }
   }
 
   .chat-list-wrapper {
