@@ -4,43 +4,46 @@
       ChatGpt
     </h2>
     <div ref="listWrapper" class="chat-list-wrapper">
-      <div class="chat-item"  v-for="(chat, index) in chatList" :key="index">
+      <div class="chat-item" v-for="(chat, index) in chatList" :key="index">
 
-        <!-- 判断消息是从自己发出还是接收 -->
+        <!-- 判断消息是从自己发出 -->
         <template v-if="chat.from === 'self'">
-          <!-- showType === 1 对话模式 -->
-          <p class="oneself" v-if="chat.showType === 1 && chat.chatModel === 1">
+          <!--自己的消息 showType === 1 对话模式 -->
+          <p class="oneself" v-if="chat.showType === 1 && this.chatModel === 1">
             <span>{{ chat.text }}</span>
             <a href="javascript:;">
               <img :src="chat.face" alt="">
             </a>
           </p>
-          <p class="oneself" v-else>
-            <span>{{ chat.text }}</span>
+          <!--自己的消息 showType === 0 作图模式  -->
+          <p class="oneself" v-if="chat.showType === 0 && this.chatModel === 0">
+            <span>{{ chat.text }}123</span>
             <a href="javascript:;">
               <img :src="chat.face" alt="">
             </a>
           </p>
         </template>
 
-        
+        <!-- 判断消息是AI发出 -->
         <template v-else>
-          <p v-if="chatModel === 1 && chat.showType === 1" class="AI">
+          <!--AI的消息 showType === 1 对话模式 -->
+          <p class="AI" v-if="chatModel === 1 && chat.showType === 1">
             <a href="javascript:;">
               <img src="https://i.postimg.cc/jdS60KQW/openai.png" alt="">
             </a>
             <span>{{ chat.text }}</span>
           </p>
-          <p v-if="chatModel === 0 && chat.showType === 0" class="AI">
+          <!--AI的消息 showType === 0 作图模式 -->
+          <p class="AI" v-if="chatModel === 0 && chat.showType === 0">
             <a v-if="chat.url || chat.text" href="javascript:;">
               <img src="https://i.postimg.cc/jdS60KQW/openai.png" alt="">
             </a>
-            <span v-if="chat.url" >              
-              <span v-for="item,i in chat.url" :key="i" href="">
+            <span v-if="chat.url">
+              <span v-for="item, i in chat.url" :key="i" href="">
                 <img @click="showImgFn(item.url)" :src="item.url" alt="" />
               </span>
             </span>
-            <span v-if="chat.text">{{chat.text}}</span>
+            <span v-if="chat.text">{{ chat.text }}</span>
           </p>
         </template>
 
@@ -65,10 +68,10 @@
     </div>
 
     <!--展示图片 -->
-    <div @click="closeShowImgFn" :class="{showImgUrl}">
+    <div @click="closeShowImgFn" :class="{ showImgUrl }">
       <img @click="closeShowImgFn" :src="showImgUrl" alt="">
     </div>
-  </div>
+</div>
 </template>
 
 <script>
@@ -81,7 +84,7 @@ export default {
   },
   data() {
     return {
-      showImgUrl:'',
+      showImgUrl: '',
       chatModel: 1,
       isStart: false,
       currentTime: '发送',
@@ -95,28 +98,28 @@ export default {
       model: 'text-davinci-003',
       mobile: true,
       response: '',
-      urlData:'',
+      urlData: '',
       chatList: [
         {
           from: 'bot',
           face: 'https://i.postimg.cc/jdS60KQW/openai.png',
           text: `嗨 靓仔，很高兴认识你！`,
-          showType:1
+          showType: 1
         },
         {
           from: 'bot',
           face:
             avatar,
-            url:'',
-          text: '想画什么，详细描述给我',
-          showType:0
+          url: '',
+          text: '想画什么,详细描述给我',
+          showType: 0
         },
         {
           from: 'self',
           face:
             avatar,
           text: '嗨，很高兴认识你',
-          showType:1
+          showType: 1
         }
       ],
       temperature: 0,
@@ -135,14 +138,11 @@ export default {
     },
     changeModel() {
       this.chatModel = this.chatModel === 1 ? 0 : 1
-      this.baseUrl = this.chatModel === 1 ? 'https://api.openai.com/v1/completions' :'https://api.openai.com/v1/images/generations'
+      this.baseUrl = this.chatModel === 1 ? 'https://api.openai.com/v1/completions' : 'https://api.openai.com/v1/images/generations'
       console.log(this.chatModel)
     },
     submitForm() {
-      if (this.api_key === '') {
-        alert('请传入ApiKey,然后进行操作')
-        return
-      }
+
       let data = null;
       //函数防抖
       if (this.chatModel === 1) {
@@ -169,7 +169,8 @@ export default {
         from: 'self',
         face:
           avatar,
-        text: this.prompt
+        text: this.prompt,
+        showType: this.chatModel
       });
       axios.post(this.baseUrl, data, {
         headers: {
@@ -186,16 +187,16 @@ export default {
               face:
                 'https://i.postimg.cc/jdS60KQW/openai.png',
               text: this.response,
-              showType:1
+              showType: 1
             });
-          }else if(this.chatModel === 0){//作图模式
+          } else if (this.chatModel === 0) {//作图模式
             this.response = response.data
             this.chatList.push({
               from: 'bot',
               face:
                 'https://i.postimg.cc/jdS60KQW/openai.png',
               url: this.response.data,
-              showType:0
+              showType: 0
             });
           }
 
@@ -254,7 +255,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="less">
-.showImgUrl{
+.showImgUrl {
   position: absolute;
   z-index: 999;
   width: 100vw;
@@ -262,13 +263,15 @@ export default {
   background-color: #0000008a;
   display: flex;
   justify-content: center;
-  top:0;
+  top: 0;
   align-items: center;
-  img{
+
+  img {
     width: 100vw;
     height: auto;
   }
 }
+
 .loading,
 .isStart,
 .close {
@@ -305,7 +308,7 @@ export default {
 
   i {
     font-size: 14px;
-    margin-top: 90px;
+    margin-top: 50px;
     transform: scale(0.8);
   }
 
@@ -347,7 +350,7 @@ export default {
     background-image: -moz-linear-gradient(45deg, #85FFBD 0%, #FFFB7D 100%);
     background-image: -o-linear-gradient(45deg, #85FFBD 0%, #FFFB7D 100%);
     background-image: linear-gradient(45deg, #85FFBD 0%, #FFFB7D 100%);
-    margin-top: 100px;
+    margin-top: 30px;
   }
 }
 
@@ -385,7 +388,8 @@ export default {
 
     .chat-item {
       padding: 0 8px;
-      p{
+
+      p {
         margin: 8px 0;
       }
     }
@@ -415,6 +419,7 @@ export default {
         margin-left: 15px;
         border-radius: 50%;
         overflow: hidden;
+
         img {
           width: 100%;
           height: 100%;
@@ -445,11 +450,13 @@ export default {
         text-align: justify;
         box-shadow: 0 0 18px #45454542;
         overflow: hidden;
-        img{
+
+        img {
           width: 100%;
           height: 100%;
         }
       }
+
       a {
         width: 40px;
         height: 40px;
@@ -464,7 +471,8 @@ export default {
       }
     }
   }
-
+  
+/*底部*/
   .chat-wrapper {
     display: flex;
     flex-direction: row;
@@ -496,5 +504,4 @@ export default {
       font-size: 14px;
     }
   }
-}
-</style>
+}</style>
