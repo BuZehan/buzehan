@@ -56,6 +56,9 @@
     </div>
     <div @click="close" :class="[isLoading ? 'loading' : 'close']" ref="loading"><span>努力响应中... 请稍后</span></div>
     <div :class="[isStart ? 'isStart' : 'close']">
+      <div id="threeWrapper" ref="listWrapper" >
+        
+      </div>
       <input v-model="api_key" type="password" placeholder="请输入API keys" />
       <p>
         temperature&nbsp;
@@ -77,6 +80,9 @@
 <script>
 import axios from 'axios'
 var avatar = require('@/assets/image/avatar.jpg')
+import ThreeModle from '@/utils/main'
+
+
 export default {
   name: 'HelloWorld',
   props: {
@@ -128,6 +134,8 @@ export default {
   },
   mounted() {
     this.isStart = true
+    ThreeModle(this.$refs.listWrapper)
+    console.log('object :', this.$refs.listWrapper)
   },
   methods: {
     showImgFn(url) {
@@ -502,6 +510,17 @@ export default {
       height: 30px;
       color: #222222;
       font-size: 14px;
+    }
+  }
+  #threeWrapper{
+    margin: 0 auto;
+    margin-bottom: 8px;
+    width: 100%;
+    position: relative;
+    z-index: 9999;
+    height: 380px;
+    canvas{
+      border-radius: 8px;
     }
   }
 }</style>
