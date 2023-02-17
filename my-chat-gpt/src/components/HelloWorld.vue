@@ -207,9 +207,6 @@ export default {
               showType: 0
             });
           }
-
-          console.log(this.response)
-
         })
         .catch(error => {
           this.isLoading = true
@@ -243,6 +240,7 @@ export default {
       this.isLoading = false
     },
     ok() {
+
       this.isStart = false
     }
   },
