@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <h2 class="header">
-      ChatGpt
+      对话框
     </h2>
     <div ref="listWrapper" class="chat-list-wrapper">
       <div class="chat-item" v-for="(chat, index) in chatList" :key="index">
@@ -117,7 +117,7 @@ export default {
         {
           from: 'bot',
           face: 'https://i.postimg.cc/jdS60KQW/openai.png',
-          text: `嗨 靓仔，很高兴认识你！`,
+          text: `嗨~，很高兴认识你！`,
           showType: 1
         },
         {
@@ -127,13 +127,6 @@ export default {
           url: '',
           text: '想画什么,详细描述给我',
           showType: 0
-        },
-        {
-          from: 'self',
-          face:
-            avatar,
-          text: '嗨，很高兴认识你',
-          showType: 1
         }
       ],
       temperature: 0,
@@ -424,13 +417,12 @@ export default {
 
       span {
         max-width: 68vw;
-        min-width: 30px;
         min-height: 40px;
         border-radius: 7px;
         display: flex;
         align-items: center;
-        box-shadow: 0 0 18px #6c6c6c42;
-        padding: 5px;
+        box-shadow: 0 0 18px #4f4e4e13;
+        padding: 5px  10px;
         text-align: justify;
       }
 
@@ -456,21 +448,16 @@ export default {
       align-items: flex-start;
 
       span {
-        min-width: 30px;
         max-width: 68vw;
-        background-color: #20b7ff;
-        background-image: -webkit-linear-gradient(43deg, #20b7ff 0%, #9aff8b 74%, #5aff6b 99%);
-        background-image: -moz-linear-gradient(43deg, #20b7ff 0%, #9aff8b 74%, #5aff6b 99%);
-        background-image: -o-linear-gradient(43deg, #20b7ff 0%, #9aff8b 74%, #5aff6b 99%);
-        background-image: linear-gradient(43deg, #20b7ff 0%, #9aff8b 74%, #5aff6b 99%);
+        background-color: #94ddff;
         min-height: 40px;
         display: inline-block;
         border-radius: 7px;
         display: flex;
         align-items: center;
-        padding: 5px;
+        padding: 5px 10px;
         text-align: justify;
-        box-shadow: 0 0 18px #45454542;
+        box-shadow: 0 0 18px #4545451e;
         overflow: hidden;
 
         img {
