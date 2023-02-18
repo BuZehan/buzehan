@@ -8,6 +8,15 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import Stats from 'three/addons/libs/stats.module.js';
 import auto from './auto'
 export default (container, loadNum, lastLoading) => {
+    let width = 300;
+    let height = 300;
+    if(container.offsetHeight && container.offsetWidth) {
+        width = container.offsetWidth;
+        height = container.offsetHeight;
+    }else{
+
+    }
+   
     function showLoad() {
         let h1 = container.children[0].children[0]
         let progress = container.children[0].children[1]
@@ -29,14 +38,14 @@ export default (container, loadNum, lastLoading) => {
     // 1、 创建场景 + 使用控制器查看3d物体 + 控制3D物体移动  + BufferGeometry
     const scene = new THREE.Scene();
     // 2、 创建相机  （透视相机）
-    const camera = new THREE.PerspectiveCamera(75, (container.offsetWidth / 2) / (container.offsetHeight / 2), 0.1, 1000)
+    const camera = new THREE.PerspectiveCamera(75, (width / 2) / (container.offsetHeight / 2), 0.1, 1000)
     //设置相机位置
     camera.position.set(5, 2, 8)
     scene.add(camera)
 
     const renderer = new THREE.WebGLRenderer()
     // 设置 渲染尺寸的的大小
-    renderer.setSize(container.offsetWidth, container.offsetHeight || 300)
+    renderer.setSize(width,height || 300)
     // 将WebGl渲染的canva添加到body上
     container.appendChild(renderer.domElement)
     renderer.setClearColor(0xfffffff, 1); //设置背景颜色
