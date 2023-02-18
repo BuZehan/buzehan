@@ -36,7 +36,7 @@ export default (container, loadNum, lastLoading) => {
 
     const renderer = new THREE.WebGLRenderer()
     // 设置 渲染尺寸的的大小
-    renderer.setSize(container.offsetWidth, container.offsetHeight)
+    renderer.setSize(container.offsetWidth, container.offsetHeight || 300)
     // 将WebGl渲染的canva添加到body上
     container.appendChild(renderer.domElement)
     renderer.setClearColor(0xfffffff, 1); //设置背景颜色
@@ -52,7 +52,7 @@ export default (container, loadNum, lastLoading) => {
     dracoLoader.setDecoderPath('./draco/') // 设置public下的解码路径，注意最后面的/
 
     //环境光
-    var ambient = new THREE.AmbientLight(0xffffff);
+    var ambient = new THREE.AmbientLight(0xfeefff);
     scene.add(ambient);
     let mixer = null;
 

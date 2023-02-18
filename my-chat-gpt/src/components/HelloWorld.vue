@@ -528,7 +528,6 @@ export default {
     z-index: 9999;
     height: 300px;
     margin-bottom: 40px;
-
     canvas {
       width: 100%;
       height: 300px;
