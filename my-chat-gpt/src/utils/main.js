@@ -8,7 +8,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import Stats from 'three/addons/libs/stats.module.js';
 import auto from './auto'
 export default (container, loadNum, lastLoading) => {
-    let width = window.innerWidth;
+    let width = window.innerWidth/2;
     let height = 350;
     if(container.offsetHeight && container.offsetWidth) {
         width = container.offsetWidth;
