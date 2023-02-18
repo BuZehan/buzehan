@@ -57,7 +57,11 @@
     <div @click="close" :class="[isLoading ? 'loading' : 'close']" ref="loading"><span>努力响应中... 请稍后</span></div>
     <div :class="[isStart ? 'isStart' : 'close']">
       <div id="threeWrapper" ref="listWrapper">
-        <h1 ref="loadCur"></h1>
+        <p>
+          <span></span>
+          <i></i>
+        </p>
+        <h1 ref="loadText"></h1>
       </div>
       <input v-model="api_key" type="password" placeholder="请输入API keys" />
 
@@ -530,11 +534,45 @@ export default {
     position: relative;
     z-index: 9999;
     height: 300px;
-
-    canvas {
+    margin-bottom: 40px;
+    p{
+      width:80vw;
+      position: absolute;
+      transform: translateX(10vw);
+      transition: all 1s linear;
+      height: 15px;
       border-radius: 8px;
-      width: 100%;
-      height: 100%;
+      color: #ffffff;
+      overflow: hidden;
+      font-size: 14px;
+      bottom: 120px;
+      border: 1px solid #0000004f;
+      background-color: #ffffff;
+      span{
+        display: inline-block;
+        color: #b5cfff;
+        font-size: 14px;
+        width: 90px;
+        z-index: 11100;
+      }
+      i{
+        display: inline-block;
+        width: 40px;
+        position: absolute;
+        transition: all 0.5s;
+        height: 15px;
+        margin-top: 0;
+        left: 0;
+        background-color: #206eff;
+        transform: scale(1);
+      }
+    }
+    h1{
+      color: #aaa;
+      position: absolute;
+      bottom: 0px;
+      left: 50%;
+      transform: translateX(-50%);
     }
   }
 }

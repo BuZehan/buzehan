@@ -9,8 +9,20 @@ import Stats from 'three/addons/libs/stats.module.js';
 import auto from './auto'
 export default (container, loadNum, lastLoading) => {
     function showLoad() {
-        let h1 = container.children[0]
-        h1.textContent = window.__Loading.loading + '%'
+        let h1 = container.children[0].children[0]
+        let progress = container.children[0].children[1]
+        let progressWrapper = container.children[0]
+        if(window.__Loading.loading === 100) {
+            h1.textContent = '加载完成'
+           progress.style.width = window.__Loading.loading +'%'
+            console.log("模型加载完成")
+            progressWrapper.style.opacity = 0
+            progressWrapper = null
+            return 
+        }else{
+           h1.textContent = window.__Loading.loading + '%' 
+           progress.style.width = window.__Loading.loading +'%'
+        }
     }
     auto.autoRun(showLoad)
     //基本内容 
