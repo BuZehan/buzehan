@@ -56,17 +56,18 @@
     </div>
     <div @click="close" :class="[isLoading ? 'loading' : 'close']" ref="loading"><span>努力响应中... 请稍后</span></div>
     <div :class="[isStart ? 'isStart' : 'close']">
-      <div id="threeWrapper" ref="listWrapper" >
-        
+      <div id="threeWrapper" ref="listWrapper">
+        <h1 ref="loadCur"></h1>
       </div>
       <input v-model="api_key" type="password" placeholder="请输入API keys" />
+
+      <button @click="ok">确&nbsp;&nbsp;认</button>
       <p>
         temperature&nbsp;
         <input class="range" type="range" ref="range" name="" id="" @change="changeRange" v-model="temperature" min="0"
           max="1" step="0.1" />
         <span>{{ temperature }}</span>
       </p>
-      <button @click="ok">确&nbsp;&nbsp;认</button>
       <i>temperature：要使用的采样策略。 接近 1 的值会给模型带来更多风险/创造力，而接近 0 的值会生成明确定义的答案。</i>
     </div>
 
@@ -74,14 +75,17 @@
     <div @click="closeShowImgFn" :class="{ showImgUrl }">
       <img @click="closeShowImgFn" :src="showImgUrl" alt="">
     </div>
-</div>
+  </div>
 </template>
 
 <script>
+import auto from '@/utils/auto'
 import axios from 'axios'
 var avatar = require('@/assets/image/avatar.jpg')
 import ThreeModle from '@/utils/main'
-
+window.__Loading = {
+  loading: 0
+}
 
 export default {
   name: 'HelloWorld',
@@ -133,8 +137,14 @@ export default {
     };
   },
   mounted() {
+    let obj = window.__Loading
+    auto.Observe(obj)
+    let Loading = {
+      loadNum: 0,
+      lastLoading: 0
+    }
     this.isStart = true
-    ThreeModle(this.$refs.listWrapper)
+    ThreeModle(this.$refs.listWrapper, Loading)
     console.log('object :', this.$refs.listWrapper)
   },
   methods: {
@@ -167,8 +177,6 @@ export default {
           size: "1024x1024"
         }
       }
-
-
 
       if (!this.isAble) {
         this.isLoading = true
@@ -244,6 +252,9 @@ export default {
       this.isStart = false
     }
   },
+  destroyed() {
+    window.__Loading = null;
+  },
   watch: {
     'chatList': {
       handler(v) {
@@ -291,7 +302,6 @@ export default {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  padding: 15px;
   align-items: center;
   transition: all .2s linear;
   background-color: #00000044;
@@ -300,6 +310,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-top: 20px;
 
     span {
       width: 20px;
@@ -314,7 +325,7 @@ export default {
 
   i {
     font-size: 14px;
-    margin-top: 50px;
+    margin-top: 20px;
     transform: scale(0.8);
   }
 
@@ -328,8 +339,9 @@ export default {
 .isStart {
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  background-color: #000000d7;
+  justify-content: center;
+  background-color: #ffffff;
+  color: #333;
 
   input {
     border: none;
@@ -339,24 +351,24 @@ export default {
     padding-left: 15px;
     transition: all 0s;
     width: 280px;
+    box-shadow: 0 0 15px #00000010;
     border-radius: 25px;
     transform: scale(0.9);
+  }
+
+  .range {
+    height: 10px;
   }
 
   button {
     border: none;
     width: 200px;
     height: 30px;
-    color: #000;
+    color: #3f3f3f;
+    font-weight: 900;
     font-size: 18px;
     border-radius: 50px;
-    background-color: #85FFBD;
-    font-weight: 900;
-    background-image: -webkit-linear-gradient(45deg, #85FFBD 0%, #FFFB7D 100%);
-    background-image: -moz-linear-gradient(45deg, #85FFBD 0%, #FFFB7D 100%);
-    background-image: -o-linear-gradient(45deg, #85FFBD 0%, #FFFB7D 100%);
-    background-image: linear-gradient(45deg, #85FFBD 0%, #FFFB7D 100%);
-    margin-top: 30px;
+    margin: 30px 0;
   }
 }
 
@@ -477,8 +489,8 @@ export default {
       }
     }
   }
-  
-/*底部*/
+
+  /*底部*/
   .chat-wrapper {
     display: flex;
     flex-direction: row;
@@ -510,15 +522,20 @@ export default {
       font-size: 14px;
     }
   }
-  #threeWrapper{
+
+  #threeWrapper {
     margin: 0 auto;
     margin-bottom: 8px;
     width: 100%;
     position: relative;
     z-index: 9999;
-    height: 380px;
-    canvas{
+    height: 300px;
+
+    canvas {
       border-radius: 8px;
+      width: 100%;
+      height: 100%;
     }
   }
-}</style>
+}
+</style>
