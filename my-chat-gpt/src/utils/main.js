@@ -80,6 +80,8 @@ export default (container, loadNum, lastLoading) => {
         render();
 
     }, function (xhr) {
+        console.log('xhr :', xhr)
+
         if (lastLoading > Math.ceil(loadNum / xhr.loaded * 100)) {
             return
         } else {
