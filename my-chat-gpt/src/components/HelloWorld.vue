@@ -130,10 +130,12 @@ export default {
         }
       ],
       temperature: 0,
-      baseUrl: 'https://api.openai.com/v1/completions'
+      baseUrl: 'https://api.openai.com/v1/completions',
+      isOff:true
     };
   },
   mounted() {
+
     let obj = window.__Loading
     auto.Observe(obj)
     let Loading = {
@@ -142,7 +144,6 @@ export default {
     }
     this.isStart = true
     ThreeModle(this.$refs.listWrapper, Loading)
-    console.log('object :', this.$refs.listWrapper)
   },
   methods: {
     showImgFn(url) {
@@ -259,6 +260,11 @@ export default {
           let wrapper = this.$refs.listWrapper
           wrapper.scrollTop = wrapper.scrollHeight
         })
+        if(localStorage.getItem('chatList')) {
+          this.chatList = this.$store.getters['chatInfo/chatListInfo']
+        }
+        console.log('this.chatList :', this.chatList)
+          this.$store.dispatch('chatInfo/InsertChatInfo',this.chatList)
       },
       immediate: true,
       deep: true
@@ -422,7 +428,7 @@ export default {
         display: flex;
         align-items: center;
         box-shadow: 0 0 18px #4f4e4e13;
-        padding: 5px  10px;
+        padding: 5px 10px;
         text-align: justify;
       }
 
@@ -522,12 +528,14 @@ export default {
     z-index: 9999;
     height: 300px;
     margin-bottom: 40px;
-    canvas{
+
+    canvas {
       width: 100%;
       height: 300px;
     }
-    p{
-      width:80vw;
+
+    p {
+      width: 80vw;
       position: absolute;
       transform: translateX(10vw);
       transition: all 1s linear;
@@ -539,14 +547,16 @@ export default {
       bottom: 120px;
       border: 1px solid #0000004f;
       background-color: #ffffff;
-      span{
+
+      span {
         display: inline-block;
         color: #b5cfff;
         font-size: 14px;
         width: 90px;
         z-index: 11100;
       }
-      i{
+
+      i {
         display: inline-block;
         width: 40px;
         position: absolute;
@@ -558,7 +568,8 @@ export default {
         transform: scale(1);
       }
     }
-    h1{
+
+    h1 {
       color: #aaa;
       position: absolute;
       bottom: 0px;
@@ -566,5 +577,4 @@ export default {
       transform: translateX(-50%);
     }
   }
-}
-</style>
+}</style>
