@@ -1,7 +1,8 @@
 <template>
   <div class="container">
+    <!-- <three01 /> -->
     <h2 class="header">
-      对话框
+        {{ this.titleText }}
     </h2>
     <div ref="listWrapper" class="chat-list-wrapper">
       <div class="chat-item" v-for="(chat, index) in chatList" :key="index">
@@ -84,6 +85,7 @@
 
 <script>
 import auto from '@/utils/auto'
+import three01 from './three01.vue'
 import axios from 'axios'
 var avatar = require('@/assets/image/avatar.jpg')
 import ThreeModle from '@/utils/main'
@@ -93,11 +95,15 @@ window.__Loading = {
 
 export default {
   name: 'HelloWorld',
+  components:{
+    three01
+  },
   props: {
     msg: String
   },
   data() {
     return {
+      titleText: 'OpenAI',
       showImgUrl: '',
       chatModel: 1,
       isStart: false,
@@ -131,7 +137,7 @@ export default {
       ],
       temperature: 0,
       baseUrl: 'https://api.openai.com/v1/completions',
-      isOff:true
+      isOff: true
     };
   },
   mounted() {
@@ -158,9 +164,13 @@ export default {
       console.log(this.chatModel)
     },
     submitForm() {
-
+      this.titleText = '对方输入中...'
+      setTimeout(() => {
+            this.isLoading = false
+          }, 800);
       let data = null;
       //函数防抖
+      //判断 对话模式 || 作图模式
       if (this.chatModel === 1) {
         data = {
           prompt: this.prompt,
@@ -179,6 +189,7 @@ export default {
       if (!this.isAble) {
         this.isLoading = true
       }
+      //添加自己的发言
       this.chatList.push({
         from: 'self',
         face:
@@ -193,6 +204,7 @@ export default {
         }
       })
         .then(response => {
+          this.titleText = 'AI'
           this.isLoading = false
           if (this.chatModel === 1) {//对话模式
             this.response = response.data.choices[0].text;
@@ -215,12 +227,13 @@ export default {
           }
         })
         .catch(error => {
+          this.titleText = 'AI'
           this.isLoading = true
           this.$refs.loading.children[0].innerText = error
           console.log('error :', error)
           setTimeout(() => {
             this.isLoading = false
-          }, 1000);
+          }, 2000);
         });
       this.prompt = ''
 
@@ -246,7 +259,6 @@ export default {
       this.isLoading = false
     },
     ok() {
-
       this.isStart = false
     }
   },
@@ -260,11 +272,10 @@ export default {
           let wrapper = this.$refs.listWrapper
           wrapper.scrollTop = wrapper.scrollHeight
         })
-        if(localStorage.getItem('chatList')) {
+        if (localStorage.getItem('chatList')) {
           this.chatList = this.$store.getters['chatInfo/chatListInfo']
         }
-        console.log('this.chatList :', this.chatList)
-          this.$store.dispatch('chatInfo/InsertChatInfo',this.chatList)
+        this.$store.dispatch('chatInfo/InsertChatInfo', this.chatList)
       },
       immediate: true,
       deep: true
@@ -384,7 +395,7 @@ export default {
   width: 100vw;
   height: 100vh;
   position: relative;
-
+  z-index: 1;
   .header {
     height: 5vh;
     display: flex;
@@ -528,6 +539,7 @@ export default {
     z-index: 9999;
     height: 300px;
     margin-bottom: 40px;
+
     canvas {
       width: 100%;
       height: 300px;
@@ -576,4 +588,5 @@ export default {
       transform: translateX(-50%);
     }
   }
-}</style>
+}
+</style>

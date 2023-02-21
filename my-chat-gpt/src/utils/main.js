@@ -40,7 +40,7 @@ export default (container, loadNum, lastLoading) => {
     // 2、 创建相机  （透视相机）
     const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000)
     //设置相机位置
-    camera.position.set(5, 2, 8)
+    camera.position.set(5, 0, 9)
     scene.add(camera)
 
     const renderer = new THREE.WebGLRenderer()
@@ -109,10 +109,10 @@ export default (container, loadNum, lastLoading) => {
     // 设置控制器阻尼  让控制器又更真实的效果  必须在动画循环里调用.update()
     controls.enableDamping = true
 
-    //渲染函数   tiem  => ms
+    //渲染函数   tiem  => ms    
     //设置时钟
     const clock = new THREE.Clock()
-    //设置动画 
+    //设置动画
     function render() {
         controls.update()
         renderer.render(scene, camera);
@@ -123,7 +123,6 @@ export default (container, loadNum, lastLoading) => {
         } catch (error) {
 
         }
-        controls.update();
         requestAnimationFrame(render);
     }
     render();
