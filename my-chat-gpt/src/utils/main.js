@@ -7,30 +7,34 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import Stats from 'three/addons/libs/stats.module.js';
 import auto from './auto'
+//环境贴图
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader'
+
+
 export default (container, loadNum, lastLoading) => {
-    let width = window.innerWidth/2;
+    let width = window.innerWidth / 2;
     let height = 350;
-    if(container.offsetHeight && container.offsetWidth) {
+    if (container.offsetHeight && container.offsetWidth) {
         width = container.offsetWidth;
         height = container.offsetHeight;
-    }else{
+    } else {
 
     }
-   
+
     function showLoad() {
         let h1 = container.children[0].children[0]
         let progress = container.children[0].children[1]
         let progressWrapper = container.children[0]
-        if(window.__Loading.loading === 100) {
+        if (window.__Loading.loading === 100) {
             h1.textContent = '加载完成'
-           progress.style.width = window.__Loading.loading +'%'
+            progress.style.width = window.__Loading.loading + '%'
             console.log("模型加载完成")
             progressWrapper.style.opacity = 0
             progressWrapper = null
-            return 
-        }else{
-           h1.textContent = window.__Loading.loading + '%' 
-           progress.style.width = window.__Loading.loading +'%'
+            return
+        } else {
+            h1.textContent = window.__Loading.loading + '%'
+            progress.style.width = window.__Loading.loading + '%'
         }
     }
     auto.autoRun(showLoad)
@@ -42,10 +46,16 @@ export default (container, loadNum, lastLoading) => {
     //设置相机位置
     camera.position.set(5, 0, 9)
     scene.add(camera)
+    const rgbeLoader = new RGBELoader()
+    rgbeLoader.loadAsync('/textures/HDR/night.hdr').then((texture) => {
+        texture.mapping = THREE.EquirectangularReflectionMapping
+        scene.environment = texture
+        scene.background = texture
+    })
 
     const renderer = new THREE.WebGLRenderer()
     // 设置 渲染尺寸的的大小
-    renderer.setSize(width,height)
+    renderer.setSize(width, height)
     // 将WebGl渲染的canva添加到body上
     container.appendChild(renderer.domElement)
     renderer.setClearColor(0xfffffff, 1); //设置背景颜色
@@ -67,6 +77,7 @@ export default (container, loadNum, lastLoading) => {
 
     //物体自发光
     renderer.outputEncoding = THREE.sRGBEncoding;
+
 
     const manager = new THREE.LoadingManager();
     manager.onProgress = function (item, loaded, total) {

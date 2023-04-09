@@ -51,7 +51,7 @@
       </div>
     </div>
     <div class="chat-wrapper">
-      <input class="chatInput" type="text" v-model="prompt">
+      <input class="chatInput" type="text" v-model="messages">
       <button :disabled="this.isAble" ref="sendBtn" @click="submitForm">{{ currentTime }}</button>
       <button ref="changeModle" @click="changeModel">{{ chatModel === 1 ? "作图" : "对话" }}</button>
     </div>
@@ -113,9 +113,9 @@ export default {
       api_key: "",
       prompt: '',
       chatMsg: '',
-      prompt: '',
+      messages: '',
       max_tokens: 1000,
-      model: 'text-davinci-003',
+      model: 'gpt-3.5-turbo',
       mobile: true,
       response: '',
       urlData: '',
@@ -136,7 +136,7 @@ export default {
         }
       ],
       temperature: 0,
-      baseUrl: 'https://api.openai.com/v1/completions',
+      baseUrl: 'https://api.openai.com/v1/chat/completions',
       isOff: true
     };
   },
@@ -149,7 +149,7 @@ export default {
       lastLoading: 0
     }
     this.isStart = true
-    ThreeModle(this.$refs.listWrapper, Loading)
+    // ThreeModle(this.$refs.listWrapper, Loading)
   },
   methods: {
     showImgFn(url) {
@@ -160,7 +160,7 @@ export default {
     },
     changeModel() {
       this.chatModel = this.chatModel === 1 ? 0 : 1
-      this.baseUrl = this.chatModel === 1 ? 'https://api.openai.com/v1/completions' : 'https://api.openai.com/v1/images/generations'
+      this.baseUrl = this.chatModel === 1 ? 'https://api.openai.com/v1/chat/completions' : 'https://api.openai.com/v1/images/generations'
       console.log(this.chatModel)
     },
     submitForm() {
@@ -173,9 +173,9 @@ export default {
       //判断 对话模式 || 作图模式
       if (this.chatModel === 1) {
         data = {
-          prompt: this.prompt,
+          messages: [{"role": "user", "content": this.messages}],
           model: this.model,
-          max_tokens: this.max_tokens,
+          temperature:0.7
         }
       } else {
         //作图模式
@@ -194,7 +194,7 @@ export default {
         from: 'self',
         face:
           avatar,
-        text: this.prompt,
+        text: this.messages,
         showType: this.chatModel
       });
       axios.post(this.baseUrl, data, {
@@ -235,7 +235,7 @@ export default {
             this.isLoading = false
           }, 2000);
         });
-      this.prompt = ''
+      this.messages = ''
 
       this.isAble = true
       if (this.isAble === true) {
